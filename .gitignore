@@ -1,0 +1,21 @@
+# Ignore all virtual environment folders named 'venv' or 'env'
+**/venv/
+**/env/
+
+# Ignore .env files (used for environment variables)
+**/.env
+
+# __pycache__ folders
+**/__pycache__/
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+
+
+
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
