@@ -26,6 +26,25 @@ def extract_text_from_docx(docx_file):
     return text
 
 
+def ensure_list(value):
+    """Convert any value to a list format safely"""
+    if isinstance(value, list):
+        return value
+    elif isinstance(value, dict):
+        # Flatten dictionary values into a single list
+        result = []
+        for v in value.values():
+            if isinstance(v, list):
+                result.extend(v)
+            elif isinstance(v, str):
+                result.append(v)
+        return result
+    elif isinstance(value, str):
+        return [value]
+    else:
+        return []
+
+
 def add_custom_css():
     st.markdown("""
     <style>
@@ -524,6 +543,7 @@ def create_streamlit_app(llm, portfolio, clean_text):
     if generate_button:
         try:
             with st.spinner("🔄 Processing your information and generating personalized email..."):
+                # Extract resume text based on file type
                 if uploaded_file.type == "application/pdf":
                     resume_text = extract_text_from_pdf(uploaded_file)
                 elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -531,8 +551,10 @@ def create_streamlit_app(llm, portfolio, clean_text):
                 else:
                     resume_text = str(uploaded_file.read(), "utf-8")
                 
+                # Extract resume information
                 resume_info = llm.extract_resume_info(resume_text)
                 
+                # Process job information
                 if "Text" in input_method:
                     job_data = llm.parse_job_description(job_input)
                     jobs = [job_data] if not isinstance(job_data, list) else job_data
@@ -562,11 +584,13 @@ def create_streamlit_app(llm, portfolio, clean_text):
             st.header("📧 Generated Cold Email(s)")
             
             for i, job in enumerate(jobs):
-                job_skills = job.get('skills', [])
-                if isinstance(job_skills, str):
-                    job_skills = [job_skills]
+                # FIXED: Safely handle job skills regardless of type
+                job_skills = ensure_list(job.get('skills', []))
+                resume_skills = ensure_list(resume_info.get('skills', []))
                 
-                relevant_projects = portfolio.query_links(job_skills + resume_info.get('skills', []))
+                # Safely combine the skills lists
+                all_skills = job_skills + resume_skills
+                relevant_projects = portfolio.query_links(all_skills)
                 
                 email = llm.write_candidate_email(job, resume_info, relevant_projects)
                 
@@ -588,6 +612,13 @@ def create_streamlit_app(llm, portfolio, clean_text):
         except Exception as e:
             st.error(f"❌ An error occurred: {str(e)}")
             st.info("💡 Please check your inputs and try again. Make sure your resume file is readable and job information is complete.")
+            # Optional: Add debug information
+            if st.checkbox("Show debug information", key="debug_mode"):
+                st.write("**Debug Information:**")
+                st.write(f"Error type: {type(e).__name__}")
+                st.write(f"Error message: {str(e)}")
+                import traceback
+                st.code(traceback.format_exc())
 
 
 def create_sample_portfolio_data():
