@@ -10,3 +10,6 @@ python-docx
 uuid
 validators
 protobuf<4.21.0
+pysqlite3-binary
+chromadb
+
