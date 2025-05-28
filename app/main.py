@@ -562,32 +562,14 @@ def create_streamlit_app(llm, portfolio, clean_text):
             st.header("📧 Generated Cold Email(s)")
             
             for i, job in enumerate(jobs):
-                    job_skills = job.get('skills', [])
-
-                    # Convert job_skills to a list regardless of its type
-                    if isinstance(job_skills, dict):
-                   # If it's a dict, extract values and flatten them
-                        job_skills = []
-                    for value in job.get('skills', {}).values():
-                        if isinstance(value, list):
-                          job_skills.extend(value)
-                        elif isinstance(value, str):
-                          job_skills.append(value)
-                        elif isinstance(job_skills, str):
-                         # If it's a string, make it a list
-                          job_skills = [job_skills]
-                        elif not isinstance(job_skills, list):
-                          # If it's neither dict, string, nor list, default to empty list
-                        job_skills = []
-
-# Ensure resume_info skills is also a list
-resume_skills = resume_info.get('skills', [])
-if not isinstance(resume_skills, list):
-    resume_skills = []
-
-# Now safely combine the lists
-all_skills = job_skills + resume_skills
-relevant_projects = portfolio.query_links(all_skills)
+                job_skills = job.get('skills', [])
+                if isinstance(job_skills, str):
+                    job_skills = [job_skills]
+                
+                relevant_projects = portfolio.query_links(job_skills + resume_info.get('skills', []))
+                
+                email = llm.write_candidate_email(job, resume_info, relevant_projects)
+                
                 if len(jobs) > 1:
                     st.subheader(f"📧 Email {i+1}: {job.get('role', 'Unknown Role')}")
                 
