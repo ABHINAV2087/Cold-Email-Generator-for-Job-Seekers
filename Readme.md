@@ -2,7 +2,10 @@
 # 🚀 ColdConnect.Ai Cold Email Generator for Job-Seeking Candidates
 
 A smart, AI-powered web app that helps job seekers generate **personalized cold emails** to companies by analyzing their resume, past projects, and the job description.
-
+## Preview 
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
 ## 🔧 Features
 
 1. **Upload Project Portfolio**
