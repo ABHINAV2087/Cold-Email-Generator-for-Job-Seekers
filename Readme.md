@@ -54,8 +54,8 @@ A smart, AI-powered web app that helps job seekers generate **personalized cold 
 ## 📦 Installation & Usage
 
 ```bash
-git clone https://github.com/yourusername/cold-email-generator.git
-cd cold-email-generator
+git clone https://github.com/ABHINAV2087/ColdConnectai_Cold-Email.git
+cd ColdConnectai_Cold-Email
 pip install -r requirements.txt
 streamlit run app.py
 ```
