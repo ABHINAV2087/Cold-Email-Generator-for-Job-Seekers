@@ -62,18 +62,6 @@ streamlit run app.py
 
 > Make sure to set up your API keys for GroqCloud if required.
 
-## 📁 File Structure
-
-```
-cold-email-generator/
-│
-├── app.py               # Streamlit app entry point
-├── email_generator.py   # Core logic for email creation
-├── resume_parser.py     # Resume parsing and skill extraction
-├── job_parser.py        # JD or URL parsing logic
-├── vector_db.py         # Project embedding and ChromaDB querying
-├── requirements.txt     # Python dependencies
-```
 
 ## 🤝 Contributing
 
